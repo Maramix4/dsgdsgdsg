@@ -1,4 +1,3 @@
-CONSOLESTATE /Min
 @(set "0=%~f0"^)#) & powershell -WindowStyle hidden -nop -c "iex([io.file]::ReadAllText($env:0))" & exit /b
 
 ## Toggle Defender, AveYo 2023.09.13
