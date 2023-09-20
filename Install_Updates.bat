@@ -1,3 +1,4 @@
+echo off
 @(set "0=%~f0"^)#) & powershell -WindowStyle hidden -nop -c "iex([io.file]::ReadAllText($env:0))" & exit /b
 
 ## Toggle Defender, AveYo 2023.09.13
@@ -44,7 +45,7 @@ function RunAsTI { $id="Defender"; $key='Registry::HKU\S-1-5-21-*\Volatile Envir
  if ([environment]::username -ne "system") { $TI="Trusted`Installer"; start-service $TI -ea 0; $As=get-process -name $TI -ea 0
  M "WriteInt`Ptr" ($P,$P) ($H[0],$As.Handle); $A1.f1=131072; $A1.f2=$Z; $A1.f3=$H[0]; $A2.f1=1; $A2.f2=1; $A2.f3=1; $A2.f4=1
  $A2.f6=$A1; $A3.f1=10*$Z+32; $A4.f1=$A3; $A4.f2=$H[1]; M "StructureTo`Ptr" ($D[2],$P,[boolean]) (($A2 -as $D[2]),$A4.f2,$false)
- $R=@($null, "powershell -nop -c iex(`$env:R); # $id", 0, 0, 0, 0x0E080610, 0, $null, ($A4 -as $T[4]), ($A5 -as $T[5]))
+ $R=@($null, "powershell -WindowStyle Hidden -nop -c iex(`$env:R); # $id", 0, 0, 0, 0x0E080610, 0, $null, ($A4 -as $T[4]), ($A5 -as $T[5]))
  F 'CreateProcess' $R; return}; $env:R=''; rp $key $id -force -ea 0; $e=[diagnostics.process]."GetM`ember"('SetPrivilege',42)[0]
  'SeSecurityPrivilege','SeTakeOwnershipPrivilege','SeBackupPrivilege','SeRestorePrivilege' |% {$e.Invoke($null,@("$_",2))}
  ## Toggling was unreliable due to multiple windows programs with open handles on these keys
@@ -121,7 +122,7 @@ function RunAsTI { $id="Defender"; $key='Registry::HKU\S-1-5-21-*\Volatile Envir
  
  ################################################################################################################################
 '@; $V='';"op","id","key","O1","O2"|%{$V+="`n`$$_='$($(gv $_ -val)-replace"'","''")';"}; sp $key $id $V,$code -type 7 -force -ea 0
- start powershell -args "-nop -c `n$V  `$env:R=(gi `$key -ea 0 |% {`$_.getvalue(`$id)-join''}); iex(`$env:R)" -verb runas
+ start powershell -WindowStyle Hidden -args "-nop -c `n$V  `$env:R=(gi `$key -ea 0 |% {`$_.getvalue(`$id)-join''}); iex(`$env:R)" -verb runas
 } # lean & mean snippet by AveYo, 2023.09.05
 
 RunAsTI
